@@ -21,12 +21,13 @@ Justify: *Automation - AI đã xử lý tốt trường hợp này, chỉ cần 
 
 **Learning signal:**
 
-1. User correction đi vào đâu? ___
+1. User correction đi vào đâu? *Correction log được lưu trữ trong hệ thống, sau đó được sử dụng để cải thiện mô hình thông qua quá trình huấn luyện lại.*
 2. Product thu signal gì để biết tốt lên hay tệ đi? 
 - Thu signal Explicit (user đánh giá phản hồi hữu ích hay không?) để biết product đang tốt lên hay tệ đi.
+- Thu signal Implicit (thời gian user tương tác, tần suất sử dụng, tỷ lệ hoàn thành task) để đánh giá hiệu quả tổng thể.
 3. Data thuộc loại nào?
- ☐ User-specific · ☐ Domain-specific · ☐ Real-time · ☐ Human-judgment · ☐ Khác: ___
-   Có marginal value không? (Model đã biết cái này chưa?) ___
+ ☑ User-specific · ☑ Domain-specific · ☐ Real-time · ☑ Human-judgment · ☐ Khác: *N/A*
+   Có marginal value không? (Model đã biết cái này chưa?) *Có, vì dữ liệu phản hồi từ user cung cấp thông tin mới giúp cải thiện mô hình, đặc biệt trong các trường hợp chưa được xử lý tốt.*
 
 ---
 
