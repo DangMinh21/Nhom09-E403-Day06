@@ -62,12 +62,90 @@
       "Vũ khí và đạn dược",
       "Chất nổ và pháo hoa",
       "Chất lỏng vượt quá 100ml trong hành lý xách tay",
-      "Pin lithium rời > 100Wh",
-      "Khí nén (bình ga, bình xịt)",
-      "Chất phóng xạ"
+      "Pin lithium rời > 160Wh",
+      "Khí nén (bình ga, bình xịt dung tích lớn)",
+      "Chất phóng xạ",
+      "Lẩu tự sôi / thức ăn tự phát nhiệt (chứa vật liệu dễ cháy, cấm hoàn toàn theo IATA)"
     ],
-    "liquids_rule": "Chất lỏng xách tay phải đựng trong túi nhựa trong suốt 1 lít, mỗi chai ≤ 100ml",
+    "liquids_rule": "Chất lỏng xách tay phải đựng trong túi nhựa trong suốt 1 lít, mỗi chai ≤ 100ml (quy tắc 3-1-1)",
     "sports_equipment": "Thiết bị thể thao phải đặt trước, phụ phí tùy loại",
-    "infant_baggage": "Trẻ sơ sinh (dưới 2 tuổi): 10kg hành lý ký gửi + xe đẩy/nôi"
+    "infant_baggage": "Trẻ sơ sinh (dưới 2 tuổi): 10kg hành lý ký gửi + xe đẩy/nôi",
+    "special_items": {
+      "durian": {
+        "vietnamese_name": "Sầu riêng",
+        "keywords": ["sầu riêng", "sau rieng", "durian"],
+        "carry_on_allowed": false,
+        "checked_allowed": true,
+        "status": "restricted",
+        "conditions": "Phải đóng gói kín hoàn toàn trong thùng xốp hoặc túi chuyên dụng để không phát tán mùi sang hành lý khác",
+        "note": "Sầu riêng và thực phẩm có mùi mạnh KHÔNG được mang lên cabin. Có thể ký gửi nếu đóng gói kín.",
+        "reference_url": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/special-items"
+      },
+      "self_heating_hotpot": {
+        "vietnamese_name": "Lẩu tự sôi / Thức ăn tự phát nhiệt",
+        "keywords": ["lẩu tự sôi", "lau tu soi", "self-heating", "tự sôi", "tự phát nhiệt", "mì tự sôi"],
+        "carry_on_allowed": false,
+        "checked_allowed": false,
+        "status": "prohibited",
+        "reason": "Chứa vật liệu dễ cháy (canxi oxide + nước, hoặc lithium) — bị cấm hoàn toàn theo quy định IATA/ICAO",
+        "note": "Lẩu tự sôi và thức ăn tự phát nhiệt BỊ CẤM hoàn toàn trên máy bay, bao gồm cả hành lý xách tay lẫn ký gửi.",
+        "reference_url": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/prohibited-items"
+      },
+      "lighter": {
+        "vietnamese_name": "Bật lửa",
+        "keywords": ["bật lửa", "bat lua", "lighter"],
+        "carry_on_allowed": "1 chiếc được phép mang theo người (không để trong hành lý ký gửi)",
+        "checked_allowed": false,
+        "status": "restricted",
+        "note": "Bật lửa kiểu đốt thông thường (1 chiếc) được phép mang theo người. Bật lửa hồ quang điện KHÔNG được phép.",
+        "reference_url": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/prohibited-items"
+      },
+      "powerbank": {
+        "vietnamese_name": "Pin dự phòng / Sạc dự phòng",
+        "keywords": ["pin dự phòng", "pin du phong", "powerbank", "sạc dự phòng", "pin lithium"],
+        "carry_on_allowed": true,
+        "checked_allowed": false,
+        "status": "restricted",
+        "conditions": "≤100Wh: tự do mang xách tay. 100–160Wh: cần xin phép hãng bay. >160Wh: CẤM.",
+        "note": "Pin rời/sạc dự phòng BẮT BUỘC mang theo người, KHÔNG được để trong hành lý ký gửi.",
+        "reference_url": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/special-items"
+      },
+      "laptop": {
+        "vietnamese_name": "Máy tính xách tay",
+        "keywords": ["laptop", "máy tính", "macbook", "notebook"],
+        "carry_on_allowed": true,
+        "checked_allowed": "Không khuyến khích",
+        "status": "allowed",
+        "note": "Laptop được phép mang xách tay. Phải lấy ra khỏi túi và để riêng khi qua kiểm tra an ninh sân bay.",
+        "reference_url": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/carry-on-baggage"
+      },
+      "pet": {
+        "vietnamese_name": "Thú cưng (chó, mèo)",
+        "keywords": ["thú cưng", "chó", "mèo", "chó mèo", "pet", "dog", "cat"],
+        "carry_on_allowed": "Chó/mèo nhỏ ≤ 5kg (cả lồng) — tuyến nội địa",
+        "checked_allowed": "Được phép nếu đặt trước và đóng gói đúng chuẩn",
+        "status": "restricted",
+        "note": "Vận chuyển thú cưng phải đặt trước ít nhất 48 giờ. Không áp dụng cho một số tuyến quốc tế.",
+        "reference_url": "https://www.vietnamairlines.com/vn/vi/travel-information/travel-with-pets"
+      },
+      "alcohol": {
+        "vietnamese_name": "Rượu / Đồ uống có cồn",
+        "keywords": ["rượu", "bia", "cồn", "alcohol", "wine", "whisky"],
+        "carry_on_allowed": "≤ 100ml/chai theo quy tắc chất lỏng",
+        "checked_allowed": "≤ 24% cồn: không giới hạn. 24–70% cồn: tối đa 5 lít/người",
+        "status": "restricted",
+        "note": "Đồ uống có cồn > 70% (140 proof) bị cấm hoàn toàn.",
+        "reference_url": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/special-items"
+      },
+      "medical_equipment": {
+        "vietnamese_name": "Thiết bị y tế / Oxy y tế",
+        "keywords": ["oxy", "oxygen", "máy trợ thở", "insulin", "kim tiêm", "thiết bị y tế"],
+        "carry_on_allowed": "Được phép với chứng nhận y tế",
+        "checked_allowed": true,
+        "status": "restricted",
+        "note": "Thiết bị hỗ trợ y tế cần thông báo trước khi bay và có xác nhận của bác sĩ.",
+        "reference_url": "https://www.vietnamairlines.com/vn/vi/travel-information/special-assistance"
+      }
+    }
   }
 }

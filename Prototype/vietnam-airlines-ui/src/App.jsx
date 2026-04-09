@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   Globe, Ticket, Briefcase, Map, Plane, Star, HelpCircle,
   MessageCircle, Search, ChevronLeft, ArrowRightLeft,
@@ -147,10 +149,52 @@ function FeedbackBar({ msgId, botResponse, userMessage, onFeedbackSent }) {
   );
 }
 
+// --- MARKDOWN COMPONENTS ---
+
+const mdComponents = {
+  p: ({ children }) => <p className="mb-1.5 last:mb-0 leading-relaxed">{children}</p>,
+  strong: ({ children }) => <strong className="font-semibold text-gray-800">{children}</strong>,
+  em: ({ children }) => <em className="italic">{children}</em>,
+  ul: ({ children }) => <ul className="list-disc pl-4 mb-1.5 space-y-0.5">{children}</ul>,
+  ol: ({ children }) => <ol className="list-decimal pl-4 mb-1.5 space-y-0.5">{children}</ol>,
+  li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+  a: ({ href, children }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-teal-600 underline hover:text-teal-800 break-all"
+    >
+      {children}
+    </a>
+  ),
+  code: ({ children }) => (
+    <code className="bg-gray-200 text-gray-800 rounded px-1 py-0.5 text-[12px] font-mono">{children}</code>
+  ),
+  blockquote: ({ children }) => (
+    <blockquote className="border-l-4 border-teal-300 pl-3 italic text-gray-600 mb-1.5">{children}</blockquote>
+  ),
+  hr: () => <hr className="border-gray-200 my-2" />,
+  h1: ({ children }) => <h1 className="text-base font-bold mb-1">{children}</h1>,
+  h2: ({ children }) => <h2 className="text-sm font-bold mb-1">{children}</h2>,
+  h3: ({ children }) => <h3 className="text-sm font-semibold mb-1">{children}</h3>,
+  table: ({ children }) => (
+    <div className="overflow-x-auto mb-2">
+      <table className="text-xs border-collapse w-full">{children}</table>
+    </div>
+  ),
+  th: ({ children }) => (
+    <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left font-semibold">{children}</th>
+  ),
+  td: ({ children }) => (
+    <td className="border border-gray-300 px-2 py-1">{children}</td>
+  ),
+};
+
 // --- BOT MESSAGE ---
 
 function BotMessage({ msg, prevUserMessage }) {
-  const lines = msg.text.split('\n');
+  const lines = msg.text.split('\n').filter(l => l.trim() !== '');
   const isLong = lines.length > COLLAPSED_LINES;
   const [expanded, setExpanded] = useState(false);
 
@@ -164,15 +208,17 @@ function BotMessage({ msg, prevUserMessage }) {
         <ChatAvatar />
       </div>
 
-      <div className="max-w-[80%]">
+      <div className="max-w-[82%]">
         {/* Bubble */}
-        <div className="bg-[#F0F4F8] text-[#333] rounded-2xl rounded-tl-sm p-3 text-[14px] whitespace-pre-wrap leading-relaxed shadow-sm">
-          {displayText}
+        <div className="bg-[#F0F4F8] text-[#333] rounded-2xl rounded-tl-sm px-3.5 py-3 text-[13.5px] shadow-sm">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+            {displayText}
+          </ReactMarkdown>
 
           {isLong && (
             <button
               onClick={() => setExpanded(v => !v)}
-              className="flex items-center gap-1 mt-2 text-xs text-teal-600 hover:text-teal-800 font-medium"
+              className="flex items-center gap-1 mt-1 text-xs text-teal-600 hover:text-teal-800 font-medium"
             >
               {expanded
                 ? <><ChevronUp size={13} /> Thu gọn</>
@@ -182,7 +228,7 @@ function BotMessage({ msg, prevUserMessage }) {
           )}
         </div>
 
-        {/* Feedback bar — below bubble, outside bubble */}
+        {/* Feedback bar */}
         <div className="px-1">
           <FeedbackBar
             msgId={msg.id}
