@@ -144,9 +144,67 @@ Nemo sẽ tự động fetch nội dung từ các URL này khi cần trả lời
 
 ---
 
+## Deploy lên Internet (Render + Vercel · Free)
+
+Để mọi người có thể truy cập Nemo mà không cần chạy local.
+
+### Bước 1 — Push code lên GitHub
+
+```bash
+git add .
+git commit -m "chore: prepare deploy config for Render + Vercel"
+git push origin main
+```
+
+### Bước 2 — Deploy Backend lên Render
+
+1. Truy cập [render.com](https://render.com) → đăng ký / đăng nhập
+2. **New > Web Service** → kết nối GitHub repo
+3. Điền các thông tin:
+
+   | Trường | Giá trị |
+   | --- | --- |
+   | Root Directory | `Prototype/nemo-backend` |
+   | Build Command | `pip install -r requirements.txt` |
+   | Start Command | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
+   | Instance Type | **Free** |
+
+4. **Environment Variables** → thêm:
+
+   | Key | Value |
+   | --- | --- |
+   | `OPENAI_API_KEY` | `sk-...` ← key thật của bạn |
+   | `OPENAI_MODEL` | `gpt-4o-mini` |
+
+5. Click **Deploy** → chờ ~3 phút
+6. Copy URL backend (dạng `https://nemo-backend-xxxx.onrender.com`)
+
+> **Lưu ý cold start:** Free tier của Render sẽ sleep sau 15 phút không có request. Lần đầu vào sẽ chờ ~30 giây để backend khởi động lại — đây là giới hạn của gói miễn phí.
+
+### Bước 3 — Deploy Frontend lên Vercel
+
+1. Truy cập [vercel.com](https://vercel.com) → đăng ký / đăng nhập
+2. **New Project** → Import repo GitHub
+3. **Root Directory** → chọn `Prototype/vietnam-airlines-ui`
+4. **Framework Preset**: Vite (tự nhận diện)
+5. **Environment Variables** → thêm:
+
+   | Key | Value |
+   | --- | --- |
+   | `VITE_BACKEND_URL` | URL backend từ Bước 2 (không có `/` cuối) |
+
+6. Click **Deploy** → chờ ~1 phút
+7. Vercel cấp URL dạng `https://vietnam-airlines-ui.vercel.app`
+
+### Kết quả
+
+Sau khi hoàn thành, chia sẻ URL Vercel cho mọi người là có thể dùng ngay — không cần cài đặt gì.
+
+---
+
 ## Lưu ý
 
 - Model mặc định `gpt-4o-mini` — đổi trong `.env` nếu cần
 - Dữ liệu chuyến bay, giá vé, khách sạn là mock data cho mục đích demo
-- Feedback lưu tại `nemo-backend/feedback_log.json`
+- Feedback lưu tại `nemo-backend/feedback_log.json` (reset khi Render restart do free tier)
 - Backend phải chạy trước khi mở frontend
