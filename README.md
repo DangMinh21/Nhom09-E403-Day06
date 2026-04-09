@@ -11,6 +11,38 @@
 
 ---
 
+## Cấu trúc nộp bài
+
+```
+Nhom09-E403-Day05/
+│
+├── spec-final.md               ← [NỘP] SPEC 6 phần đầy đủ
+├── prototype-readme.md         ← [NỘP] Mô tả prototype + link + phân công
+├── demo-slides.pdf             ← [NỘP] Poster demo (export từ demo-poster.html)
+│
+├── demo-poster.html            ← (optional) Source HTML của poster
+├── demo.mp4                    ← (optional) Video demo gốc (3m20s) — xem được trên Drive
+├── demo_1.5x.mov               ← (optional) Video demo tua 1.5x (2m14s)
+├── demo_final.mov              ← (optional) Video demo tua 1.5x, cắt 10s cuối (2m03s)
+│
+├── PLAN.md                     ← (optional) Kiến trúc chi tiết + API contract
+├── test_cases.md               ← (optional) 18 test cases có input/output mong muốn
+├── tools_list.md               ← (optional) Thiết kế 8 tools trước khi implement
+├── skerch.puml                 ← (optional) Sequence diagram PlantUML
+├── url.txt                     ← (optional) Danh sách URL VNA cho tool fetch_vna_page
+│
+└── Prototype/                  ← (optional) Source code working prototype
+    ├── nemo-backend/           ← FastAPI backend · Python 3.10
+    │   ├── main.py             ← Entrypoint: /chat /suggestions /feedback
+    │   ├── agent.py            ← OpenAI agent + system prompt + 8 tools
+    │   ├── tools/              ← 8 function-calling tools
+    │   └── mock_data/          ← JSON data: hotels, baggage, prices
+    └── vietnam-airlines-ui/    ← React 19 + Vite frontend
+        └── src/                ← Chat widget + Markdown render + feedback bar
+```
+
+---
+
 ## Giới thiệu
 
 **Nemo** là AI Agent tích hợp vào website Vietnam Airlines, giúp hành khách tra cứu thông tin nhanh chóng qua hội thoại tự nhiên. Câu trả lời được render Markdown đẹp kèm link tham khảo chính thức từ Vietnam Airlines.
