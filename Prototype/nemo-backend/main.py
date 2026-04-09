@@ -33,6 +33,7 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     response: str
+    cards: dict | None = None
 
 
 class FeedbackRequest(BaseModel):
@@ -53,9 +54,9 @@ async def chat(request: ChatRequest):
         raise HTTPException(status_code=400, detail="Tin nhắn không được để trống.")
 
     session_id = request.session_id or str(uuid.uuid4())
-    response = await chat_with_nemo(request.message, request.history, session_id=session_id)
+    result = await chat_with_nemo(request.message, request.history, session_id=session_id)
     langfuse.flush()
-    return ChatResponse(response=response)
+    return ChatResponse(response=result["response"], cards=result.get("cards"))
 
 
 class SuggestionsRequest(BaseModel):
