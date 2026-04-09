@@ -179,15 +179,22 @@ const mdComponents = {
   h2: ({ children }) => <h2 className="text-sm font-bold mb-1">{children}</h2>,
   h3: ({ children }) => <h3 className="text-sm font-semibold mb-1">{children}</h3>,
   table: ({ children }) => (
-    <div className="overflow-x-auto mb-2">
-      <table className="text-xs border-collapse w-full">{children}</table>
+    <div className="grid grid-cols-1 gap-2 mb-2">
+      {children}
     </div>
   ),
+  thead: ({ children }) => <div className="hidden">{children}</div>,
+  tbody: ({ children }) => <>{children}</>,
   th: ({ children }) => (
-    <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left font-semibold">{children}</th>
+    <div className="hidden">{children}</div>
   ),
   td: ({ children }) => (
-    <td className="border border-gray-300 px-2 py-1">{children}</td>
+    <div className="inline-block text-left text-xs">{children}</div>
+  ),
+  tr: ({ children }) => (
+    <div className="bg-teal-50 border border-teal-200 rounded-lg p-2.5 space-y-1">
+      {children}
+    </div>
   ),
 };
 
@@ -263,6 +270,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState(INITIAL_SUGGESTIONS);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [suggestionsExpanded, setSuggestionsExpanded] = useState(true);
 
   const chatContainerRef = useRef(null);
   const inputRef = useRef(null);
@@ -352,6 +360,9 @@ export default function App() {
     }
     return '';
   };
+
+  const visibleSuggestions = suggestionsExpanded ? suggestions : [];
+  const canToggleSuggestions = suggestions.length > 0;
 
   return (
     <div className="flex h-screen w-full bg-gray-100 font-sans overflow-hidden">
@@ -537,29 +548,42 @@ export default function App() {
 
           {/* Dynamic suggestions */}
           {!isLoading && suggestions.length > 0 && (
-            <div className="px-3 pb-2 border-t border-gray-100 pt-2">
-              <p className="text-[10px] text-gray-400 mb-1.5 px-1">
-                {loadingSuggestions ? 'Đang cập nhật gợi ý...' : 'Gợi ý câu hỏi'}
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {suggestions.map((s) => (
+            <div className="px-3 pb-1 border-t border-gray-100 pt-1">
+              <div className="flex items-center justify-between gap-2 mb-1 px-1">
+                <p className="text-[10px] text-gray-400">
+                  {loadingSuggestions ? 'Đang cập nhật...' : 'Câu hỏi tiếp theo'}
+                </p>
+
+                {canToggleSuggestions && (
                   <button
-                    key={s}
-                    onClick={() => {
-                      setInputValue(s);
-                      setTimeout(() => inputRef.current?.focus(), 50);
-                    }}
-                    className="text-xs bg-teal-50 border border-teal-200 text-teal-700 rounded-full px-3 py-1 hover:bg-teal-100 transition-colors text-left"
+                    onClick={() => setSuggestionsExpanded(v => !v)}
+                    className="inline-flex items-center gap-1 text-[10px] font-medium text-teal-600 hover:text-teal-800 transition-colors"
                   >
-                    {s}
+                    {suggestionsExpanded ? 'Thu gọn' : 'Mở rộng'}
                   </button>
-                ))}
+                )}
+              </div>
+              <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap pb-1 -mx-1 px-1 scrollbar-thin scrollbar-thumb-teal-200 scrollbar-track-transparent">
+                <div className="flex flex-nowrap gap-1.5 min-w-max">
+                  {visibleSuggestions.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => {
+                        setInputValue(s);
+                        setTimeout(() => inputRef.current?.focus(), 50);
+                      }}
+                      className="shrink-0 whitespace-nowrap text-xs bg-teal-50 border border-teal-200 text-teal-700 rounded-full px-3.5 py-1.5 hover:bg-teal-100 transition-colors text-left"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
           {/* Input */}
-          <div className="p-4 bg-white border-t border-gray-100 shrink-0">
+          <div className="p-3 bg-white border-t border-gray-100 shrink-0">
             <div className="relative flex items-center">
               <input
                 ref={inputRef}
@@ -579,10 +603,12 @@ export default function App() {
                 {isLoading ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
               </button>
             </div>
-            <div className="text-center mt-3 text-[11px] text-gray-500">
-              Nemo có thể sai sót, hãy kiểm tra thông tin quan trọng.{' '}
-              <a href="#" className="text-blue-500 hover:underline">Điều khoản sử dụng</a>
-            </div>
+          </div>
+
+          {/* Disclaimer at bottom */}
+          <div className="px-4 py-1.5 bg-white border-t border-gray-100 shrink-0 text-center text-[9px] text-gray-400">
+            Nemo có thể sai sót.{' '}
+            <a href="#" className="text-blue-500 hover:underline">Chi tiết</a>
           </div>
         </div>
       )}

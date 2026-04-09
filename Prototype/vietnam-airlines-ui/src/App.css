@@ -182,3 +182,44 @@
     border-right-color: var(--border);
   }
 }
+
+/* Add responsive styles for chatbot */
+.chatbot-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .chatbot-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .chatbot-sidebar {
+    width: 25%;
+  }
+
+  .chatbot-main {
+    width: 70%;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 1023px) {
+  .chatbot-container {
+    flex-direction: column;
+  }
+
+  .chatbot-sidebar {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .chatbot-main {
+    width: 100%;
+  }
+}

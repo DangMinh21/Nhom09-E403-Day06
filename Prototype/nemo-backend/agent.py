@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from pathlib import Path
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 
@@ -33,6 +34,24 @@ VNA_LINKS = {
     "contact":          "https://www.vietnamairlines.com/vn/vi/contact-us",
 }
 
+
+def load_data_presentation_rules() -> str:
+    rules_path = Path(__file__).parent / "DATA_PRESENTATION_RULES.md"
+    fallback_rules = (
+        "Khi trả về danh sách kết quả (chuyến bay, khách sạn, giá cả), "
+        "hãy trình bày theo dạng card bằng Markdown, mỗi card cách nhau bằng ---; "
+        "mỗi dòng dùng emoji + tiêu đề in đậm + giá trị; số tiền phải có dấu phẩy ngăn cách hàng nghìn."
+    )
+
+    try:
+        content = rules_path.read_text(encoding="utf-8").strip()
+        return content if content else fallback_rules
+    except Exception:
+        return fallback_rules
+
+
+DATA_PRESENTATION_RULES = load_data_presentation_rules()
+
 SYSTEM_PROMPT = f"""Bạn là **Nemo** — trợ lý AI chính thức của Vietnam Airlines.
 Nhiệm vụ: hỗ trợ hành khách tra cứu thông tin chuyến bay, giá vé, hành lý, khách sạn, và ngân sách chuyến đi.
 
@@ -59,6 +78,9 @@ Bạn CHỈ trả lời các câu hỏi liên quan đến:
 - Format: Markdown rõ ràng — dùng **in đậm**, danh sách có gạch đầu dòng, bảng khi cần
 - Emoji: dùng hợp lý để dễ đọc (✈️ 🧳 💰 🏨 ✅ ❌ ⚠️)
 - Mỗi câu trả lời có liên quan: LUÔN thêm 1 link tham khảo phù hợp ở cuối
+
+## NGUYÊN TẮC TRÌNH BÀY DỮ LIỆU
+{DATA_PRESENTATION_RULES}
 
 ## LINK THAM KHẢO (luôn thêm vào câu trả lời phù hợp)
 - Lịch bay / đặt vé: {VNA_LINKS['flight_schedule']}

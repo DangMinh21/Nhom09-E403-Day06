@@ -28,6 +28,7 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     response: str
+    booking_context: dict | None = None
 
 
 class FeedbackRequest(BaseModel):
@@ -47,8 +48,11 @@ async def chat(request: ChatRequest):
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Tin nhắn không được để trống.")
 
-    response = await chat_with_nemo(request.message, request.history)
-    return ChatResponse(response=response)
+    result = await chat_with_nemo(request.message, request.history)
+    return ChatResponse(
+        response=result.get("response", ""),
+        booking_context=result.get("booking_context"),
+    )
 
 
 class SuggestionsRequest(BaseModel):
