@@ -1,13 +1,17 @@
 import json
 import os
+import uuid
 from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from langfuse import Langfuse
 from agent import chat_with_nemo, get_suggestions, POPULAR_SUGGESTIONS
 
 load_dotenv()
+
+langfuse = Langfuse()
 
 app = FastAPI(title="Nemo - Vietnam Airlines AI Agent", version="1.0.0")
 
@@ -24,6 +28,7 @@ FEEDBACK_FILE = os.path.join(os.path.dirname(__file__), "feedback_log.json")
 class ChatRequest(BaseModel):
     message: str
     history: list[dict] = []
+    session_id: str = ""
 
 
 class ChatResponse(BaseModel):
@@ -47,7 +52,9 @@ async def chat(request: ChatRequest):
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Tin nhắn không được để trống.")
 
-    response = await chat_with_nemo(request.message, request.history)
+    session_id = request.session_id or str(uuid.uuid4())
+    response = await chat_with_nemo(request.message, request.history, session_id=session_id)
+    langfuse.flush()
     return ChatResponse(response=response)
 
 

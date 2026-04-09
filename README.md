@@ -144,6 +144,46 @@ Nemo sẽ tự động fetch nội dung từ các URL này khi cần trả lời
 
 ---
 
+## Observability với Langfuse
+
+Theo dõi cách Nemo suy luận, gọi tool, chi phí token và latency qua dashboard Langfuse.
+
+### Bước 1 — Tạo tài khoản & lấy API keys
+
+1. Vào [cloud.langfuse.com](https://cloud.langfuse.com) → đăng ký miễn phí
+2. Tạo project mới → vào **Settings > API Keys**
+3. Copy **Public Key** (`pk-lf-...`) và **Secret Key** (`sk-lf-...`)
+
+### Bước 2 — Cấu hình local
+
+Mở `Prototype/nemo-backend/.env` và điền:
+
+```text
+LANGFUSE_PUBLIC_KEY=pk-lf-your-key-here
+LANGFUSE_SECRET_KEY=sk-lf-your-key-here
+LANGFUSE_HOST=https://cloud.langfuse.com
+```
+
+### Bước 3 — Cấu hình trên Render (production)
+
+Vào Render dashboard → service `nemo-backend` → **Environment** → thêm 3 biến:
+
+| Key | Value |
+| --- | --- |
+| `LANGFUSE_PUBLIC_KEY` | `pk-lf-...` |
+| `LANGFUSE_SECRET_KEY` | `sk-lf-...` |
+| `LANGFUSE_HOST` | `https://cloud.langfuse.com` |
+
+### Những gì có thể xem trên dashboard
+
+- **Traces**: toàn bộ luồng xử lý mỗi tin nhắn (user → GPT suy luận → tool call → response)
+- **Tool calls**: tên tool, arguments đầu vào, kết quả trả về
+- **Token usage & cost**: số token và chi phí ước tính từng conversation
+- **Latency**: thời gian xử lý từng bước
+- **Sessions**: gom nhóm các tin nhắn theo phiên chat
+
+---
+
 ## Deploy lên Internet (Render + Vercel · Free)
 
 Để mọi người có thể truy cập Nemo mà không cần chạy local.

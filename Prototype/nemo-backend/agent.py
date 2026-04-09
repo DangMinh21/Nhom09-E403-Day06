@@ -2,7 +2,8 @@ import json
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from openai import AsyncOpenAI
+from langfuse.openai import AsyncOpenAI
+from langfuse.decorators import observe, langfuse_context
 
 load_dotenv()
 from tools.flights import search_flights, get_flight_status
@@ -310,7 +311,11 @@ TOOL_FUNCTIONS = {
 }
 
 
-async def chat_with_nemo(message: str, history: list[dict]) -> str:
+@observe(name="chat_with_nemo")
+async def chat_with_nemo(message: str, history: list[dict], session_id: str | None = None) -> str:
+    if session_id:
+        langfuse_context.update_current_trace(session_id=session_id, user_id=session_id)
+
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     messages.extend(history)
     messages.append({"role": "user", "content": message})
@@ -320,7 +325,8 @@ async def chat_with_nemo(message: str, history: list[dict]) -> str:
         messages=messages,
         tools=TOOLS,
         tool_choice="auto",
-        temperature=0.3,
+        temperature=0.1,
+        name="nemo-first-call",
     )
 
     assistant_message = response.choices[0].message
@@ -340,6 +346,12 @@ async def chat_with_nemo(message: str, history: list[dict]) -> str:
         else:
             result = {"error": f"Tool '{fn_name}' không tồn tại."}
 
+        langfuse_context.update_current_observation(
+            name=fn_name,
+            input=fn_args,
+            output=result,
+        )
+
         messages.append({
             "role": "tool",
             "tool_call_id": tool_call.id,
@@ -350,6 +362,7 @@ async def chat_with_nemo(message: str, history: list[dict]) -> str:
         model=MODEL,
         messages=messages,
         temperature=0.3,
+        name="nemo-final-call",
     )
 
     return final_response.choices[0].message.content
