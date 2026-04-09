@@ -180,17 +180,12 @@ const mdComponents = {
   h1: ({ children }) => <h1 className="text-base font-bold mb-1">{children}</h1>,
   h2: ({ children }) => <h2 className="text-sm font-bold mb-1">{children}</h2>,
   h3: ({ children }) => <h3 className="text-sm font-semibold mb-1">{children}</h3>,
-  table: ({ children }) => (
-    <div className="overflow-x-auto mb-2">
-      <table className="text-xs border-collapse w-full">{children}</table>
-    </div>
-  ),
-  th: ({ children }) => (
-    <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left font-semibold">{children}</th>
-  ),
-  td: ({ children }) => (
-    <td className="border border-gray-300 px-2 py-1">{children}</td>
-  ),
+  table: () => null,
+  thead: () => null,
+  tbody: () => null,
+  tr: () => null,
+  th: () => null,
+  td: () => null,
 };
 
 // --- FLIGHT CARD ---
@@ -723,7 +718,7 @@ export default function App() {
               <p className="text-[10px] text-gray-400 mb-1.5 px-1">
                 {loadingSuggestions ? 'Đang cập nhật gợi ý...' : 'Gợi ý câu hỏi'}
               </p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
                 {suggestions.map((s) => (
                   <button
                     key={s}
@@ -731,7 +726,7 @@ export default function App() {
                       setInputValue(s);
                       setTimeout(() => inputRef.current?.focus(), 50);
                     }}
-                    className="text-xs bg-teal-50 border border-teal-200 text-teal-700 rounded-full px-3 py-1 hover:bg-teal-100 transition-colors text-left"
+                    className="text-xs bg-teal-50 border border-teal-200 text-teal-700 rounded-full px-3 py-1 hover:bg-teal-100 transition-colors whitespace-nowrap flex-shrink-0"
                   >
                     {s}
                   </button>
