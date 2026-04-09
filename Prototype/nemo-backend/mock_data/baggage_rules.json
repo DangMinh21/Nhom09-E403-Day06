@@ -1,0 +1,73 @@
+{
+  "vietnam_airlines": {
+    "carry_on": {
+      "economy": {
+        "weight_kg": 7,
+        "dimensions_cm": "56x36x23",
+        "pieces": 1,
+        "notes": "1 túi xách tay nhỏ bổ sung (ví/ba lô nhỏ) kích thước ≤ 30x15x20 cm"
+      },
+      "premium_economy": {
+        "weight_kg": 10,
+        "dimensions_cm": "56x36x23",
+        "pieces": 1,
+        "notes": "1 túi xách tay nhỏ bổ sung"
+      },
+      "business": {
+        "weight_kg": 12,
+        "dimensions_cm": "56x36x23",
+        "pieces": 2,
+        "notes": "Mỗi kiện không vượt quá 12kg, tổng không quá 18kg"
+      }
+    },
+    "checked_baggage": {
+      "economy": {
+        "domestic": {
+          "weight_kg": 23,
+          "pieces": 1,
+          "overweight_fee_per_kg_vnd": 150000
+        },
+        "international": {
+          "weight_kg": 23,
+          "pieces": 1,
+          "overweight_fee_per_kg_usd": 10
+        }
+      },
+      "premium_economy": {
+        "domestic": {
+          "weight_kg": 23,
+          "pieces": 2,
+          "overweight_fee_per_kg_vnd": 150000
+        },
+        "international": {
+          "weight_kg": 23,
+          "pieces": 2,
+          "overweight_fee_per_kg_usd": 10
+        }
+      },
+      "business": {
+        "domestic": {
+          "weight_kg": 32,
+          "pieces": 2,
+          "overweight_fee_per_kg_vnd": 150000
+        },
+        "international": {
+          "weight_kg": 32,
+          "pieces": 2,
+          "overweight_fee_per_kg_usd": 15
+        }
+      }
+    },
+    "prohibited_items": [
+      "Vũ khí và đạn dược",
+      "Chất nổ và pháo hoa",
+      "Chất lỏng vượt quá 100ml trong hành lý xách tay",
+      "Pin lithium rời > 100Wh",
+      "Khí nén (bình ga, bình xịt)",
+      "Chất phóng xạ"
+    ],
+    "liquids_rule": "Chất lỏng xách tay phải đựng trong túi nhựa trong suốt 1 lít, mỗi chai ≤ 100ml",
+    "sports_equipment": "Thiết bị thể thao phải đặt trước, phụ phí tùy loại",
+    "infant_baggage": "Trẻ sơ sinh (dưới 2 tuổi): 10kg hành lý ký gửi + xe đẩy/nôi"
+  }
+}

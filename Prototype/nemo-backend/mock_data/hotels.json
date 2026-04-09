@@ -1,0 +1,156 @@
+{
+  "HAN": {
+    "airport_name": "Sân bay Nội Bài",
+    "city": "Hà Nội",
+    "hotels": [
+      {
+        "name": "Novotel Hanoi Airport",
+        "distance_km": 0.5,
+        "stars": 4,
+        "rating": 8.4,
+        "price_per_night_vnd": 1850000,
+        "amenities": ["Wifi miễn phí", "Hồ bơi", "Nhà hàng", "Đưa đón sân bay", "Phòng gym"],
+        "phone": "024 3886 6600",
+        "address": "Khu vực sân bay Nội Bài, Sóc Sơn, Hà Nội"
+      },
+      {
+        "name": "Sheraton Hanoi Hotel",
+        "distance_km": 25,
+        "stars": 5,
+        "rating": 9.0,
+        "price_per_night_vnd": 3200000,
+        "amenities": ["Wifi miễn phí", "Hồ bơi", "Spa", "Nhà hàng", "Quầy bar", "Phòng gym"],
+        "phone": "024 3719 9000",
+        "address": "K5 Nghi Tàm, 11 Xuân Diệu, Tây Hồ, Hà Nội"
+      },
+      {
+        "name": "Hanoi Airport Hotel",
+        "distance_km": 1.2,
+        "stars": 3,
+        "rating": 7.8,
+        "price_per_night_vnd": 650000,
+        "amenities": ["Wifi miễn phí", "Đưa đón sân bay", "Nhà hàng"],
+        "phone": "024 3884 5555",
+        "address": "Phù Lỗ, Sóc Sơn, Hà Nội"
+      },
+      {
+        "name": "Intercontinental Hanoi Westlake",
+        "distance_km": 28,
+        "stars": 5,
+        "rating": 9.2,
+        "price_per_night_vnd": 4500000,
+        "amenities": ["Wifi miễn phí", "Hồ bơi", "Spa", "Nhà hàng", "Phòng gym", "Trung tâm hội nghị"],
+        "phone": "024 6270 8888",
+        "address": "1A Nghi Tàm, Tây Hồ, Hà Nội"
+      }
+    ]
+  },
+  "SGN": {
+    "airport_name": "Sân bay Tân Sơn Nhất",
+    "city": "TP. Hồ Chí Minh",
+    "hotels": [
+      {
+        "name": "Tan Son Nhat Airport Hotel",
+        "distance_km": 0.3,
+        "stars": 3,
+        "rating": 7.5,
+        "price_per_night_vnd": 700000,
+        "amenities": ["Wifi miễn phí", "Đưa đón sân bay", "Nhà hàng"],
+        "phone": "028 3844 6888",
+        "address": "Sân bay Tân Sơn Nhất, Quận Tân Bình, TP.HCM"
+      },
+      {
+        "name": "Caravelle Saigon",
+        "distance_km": 8,
+        "stars": 5,
+        "rating": 9.1,
+        "price_per_night_vnd": 4800000,
+        "amenities": ["Wifi miễn phí", "Hồ bơi", "Spa", "Nhà hàng", "Quầy bar rooftop"],
+        "phone": "028 3823 4999",
+        "address": "19-23 Công trường Lam Sơn, Quận 1, TP.HCM"
+      },
+      {
+        "name": "Liberty Central Saigon Citypoint",
+        "distance_km": 7,
+        "stars": 4,
+        "rating": 8.6,
+        "price_per_night_vnd": 1600000,
+        "amenities": ["Wifi miễn phí", "Hồ bơi", "Nhà hàng", "Quầy bar"],
+        "phone": "028 3822 5678",
+        "address": "59-61 Pasteur, Quận 1, TP.HCM"
+      },
+      {
+        "name": "ibis Saigon Airport",
+        "distance_km": 1.5,
+        "stars": 3,
+        "rating": 8.0,
+        "price_per_night_vnd": 900000,
+        "amenities": ["Wifi miễn phí", "Nhà hàng", "Đưa đón sân bay"],
+        "phone": "028 3848 6666",
+        "address": "Quận Tân Bình, TP.HCM"
+      }
+    ]
+  },
+  "DAD": {
+    "airport_name": "Sân bay Quốc tế Đà Nẵng",
+    "city": "Đà Nẵng",
+    "hotels": [
+      {
+        "name": "Hilton Da Nang",
+        "distance_km": 3,
+        "stars": 5,
+        "rating": 9.3,
+        "price_per_night_vnd": 3800000,
+        "amenities": ["Wifi miễn phí", "Hồ bơi", "Spa", "Nhà hàng", "View biển"],
+        "phone": "0236 374 0888",
+        "address": "50 Bạch Đằng, Hải Châu, Đà Nẵng"
+      },
+      {
+        "name": "Da Nang Airport Hotel",
+        "distance_km": 0.8,
+        "stars": 3,
+        "rating": 7.6,
+        "price_per_night_vnd": 550000,
+        "amenities": ["Wifi miễn phí", "Đưa đón sân bay"],
+        "phone": "0236 382 9999",
+        "address": "Gần sân bay Đà Nẵng, Thanh Khê"
+      },
+      {
+        "name": "Grand Mercure Da Nang",
+        "distance_km": 4,
+        "stars": 5,
+        "rating": 9.0,
+        "price_per_night_vnd": 2900000,
+        "amenities": ["Wifi miễn phí", "Hồ bơi", "Spa", "Nhà hàng", "Phòng gym"],
+        "phone": "0236 379 8888",
+        "address": "Ngô Quyền, Sơn Trà, Đà Nẵng"
+      }
+    ]
+  },
+  "PQC": {
+    "airport_name": "Sân bay Quốc tế Phú Quốc",
+    "city": "Phú Quốc",
+    "hotels": [
+      {
+        "name": "InterContinental Phu Quoc Long Beach Resort",
+        "distance_km": 15,
+        "stars": 5,
+        "rating": 9.5,
+        "price_per_night_vnd": 6500000,
+        "amenities": ["Wifi miễn phí", "Hồ bơi", "Spa", "Bãi biển riêng", "Nhà hàng", "Đưa đón sân bay"],
+        "phone": "0297 397 8888",
+        "address": "Bãi Trường, Dương Tơ, Phú Quốc"
+      },
+      {
+        "name": "Phu Quoc Airport Hotel",
+        "distance_km": 1,
+        "stars": 2,
+        "rating": 7.2,
+        "price_per_night_vnd": 400000,
+        "amenities": ["Wifi miễn phí", "Đưa đón sân bay"],
+        "phone": "0297 398 0000",
+        "address": "Gần sân bay Phú Quốc, Dương Đông"
+      }
+    ]
+  }
+}

@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Globe, Ticket, Briefcase, Map, Plane, Star, HelpCircle, 
-  MessageCircle, Search, ChevronLeft, ArrowRightLeft, 
+import {
+  Globe, Ticket, Briefcase, Map, Plane, Star, HelpCircle,
+  MessageCircle, Search, ChevronLeft, ArrowRightLeft,
   ShoppingBag, Armchair, Shield, LayoutGrid, Building2,
-  Maximize2, Minimize2, X, Paperclip, Send, PlaneTakeoff, PlaneLanding
+  Maximize2, Minimize2, X, Send, PlaneTakeoff, PlaneLanding,
+  Loader2
 } from 'lucide-react';
+
+const BACKEND_URL = 'http://localhost:8000';
 
 // --- COMPONENTS ---
 
@@ -19,7 +22,7 @@ const LotusLogo = () => (
 
 const ChatAvatar = () => (
   <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm overflow-hidden border border-gray-200">
-    <span className="text-teal-700 font-bold text-xs">NEO</span>
+    <span className="text-teal-700 font-bold text-xs">Nemo</span>
   </div>
 );
 
@@ -27,31 +30,75 @@ const ChatAvatar = () => (
 
 export default function App() {
   const [chatState, setChatState] = useState('closed'); // 'closed', 'small', 'full'
+  const [messages, setMessages] = useState([
+    { sender: 'bot', text: 'Xin chào! Tôi là Nemo 👋 — trợ lý AI của Vietnam Airlines.\n\nTôi có thể giúp bạn:\n✈️ Tra cứu chuyến bay\n💰 Xem giá vé\n🧳 Quy định hành lý\n🏨 Khách sạn gần sân bay\n\nBạn cần tôi hỗ trợ gì?' }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // --- MOCK DATA ---
-  const chatMessages = [
-    { sender: 'bot', text: 'Bạn tham khảo thông tin các chuyến bay và giá trên website/app của chúng tôi và mua vé phù hợp với nhu cầu nhé' },
-    { sender: 'user', text: 'Tôi hỏi mãi mà bạn không hiểu, cho tôi gặp người thật!' },
-    { sender: 'bot', text: 'Chúng tôi là Chatbot Team' },
-    { sender: 'user', text: 'Hệ thống của bạn tệ quá, tôi muốn khiếu nại.' },
-    { sender: 'bot', text: 'Để biết thêm thông tin về chính sách và dịch vụ của Vietnam Airlines hoặc cần trợ giúp thông tin qua điện thoại, Quý khách vui lòng liên hệ tổng đài CSKH tại các số sau đây:\nGọi trong lãnh thổ Việt Nam: 1900 1100 (24/7)\nGọi từ nước ngoài về Việt Nam: +84 24 38320320 (24/7)\nEmail: Telesales@vietnamairlines.com' },
-    { sender: 'user', text: 'Kết nối với nhân viên hỗ trợ trực tuyến ngay lập tức.' },
-    { sender: 'bot', text: 'Bạn vui lòng cung cấp mã đặt chỗ và yêu cầu cần hỗ trợ nhé' },
-    { sender: 'user', text: 'Tôi cần xử lý gấp vì chuyến bay sắp cất cánh, đừng trả lời tự động nữa.' },
-    { sender: 'bot', text: 'Bạn vui lòng cung cấp mã đặt chỗ và yêu cầu cần hỗ trợ' },
-  ];
-
-  // Scroll to bottom of chat
   const chatContainerRef = useRef(null);
+  const inputRef = useRef(null);
+
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [chatState]);
+  }, [messages, chatState]);
+
+  const getHistory = () => {
+    const history = [];
+    for (const msg of messages) {
+      if (msg.sender === 'user') {
+        history.push({ role: 'user', content: msg.text });
+      } else if (msg.sender === 'bot') {
+        history.push({ role: 'assistant', content: msg.text });
+      }
+    }
+    return history;
+  };
+
+  const sendMessage = async () => {
+    const text = inputValue.trim();
+    if (!text || isLoading) return;
+
+    const userMessage = { sender: 'user', text };
+    const history = getHistory();
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsLoading(true);
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history }),
+      });
+
+      if (!res.ok) throw new Error(`Lỗi server: ${res.status}`);
+      const data = await res.json();
+      setMessages(prev => [...prev, { sender: 'bot', text: data.response }]);
+    } catch (err) {
+      setMessages(prev => [
+        ...prev,
+        { sender: 'bot', text: '⚠️ Xin lỗi, không thể kết nối đến server. Vui lòng thử lại sau.' }
+      ]);
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
 
   return (
     <div className="flex h-screen w-full bg-gray-100 font-sans overflow-hidden">
-      
+
       {/* --- LEFT SIDEBAR --- */}
       <div className="w-64 bg-[#005564] text-white flex flex-col relative z-20 shadow-xl h-full">
         {/* Collapse Button */}
@@ -74,10 +121,10 @@ export default function App() {
           <NavItem icon={<Plane size={20} />} label="Trải nghiệm bay" />
           <NavItem icon={<Star size={20} />} label="Lotusmiles" />
           <NavItem icon={<HelpCircle size={20} />} label="Trợ giúp" />
-          
+
           {/* Chat Button in Sidebar */}
           <div className="px-4 mt-6">
-            <button 
+            <button
               onClick={() => setChatState(chatState === 'closed' ? 'small' : chatState)}
               className="w-full flex items-center space-x-3 bg-[#004a57] border border-[#568A9B] rounded-full px-4 py-2 hover:bg-[#003d47] transition-all shadow-[0_0_10px_rgba(86,138,155,0.5)]"
             >
@@ -85,7 +132,7 @@ export default function App() {
                  <ChatAvatar />
                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#004a57] rounded-full"></span>
               </div>
-              <span className="font-medium text-sm">Chat với NEO</span>
+              <span className="font-medium text-sm">Chat với Nemo</span>
             </button>
           </div>
         </div>
@@ -105,11 +152,10 @@ export default function App() {
       {/* --- MAIN CONTENT AREA --- */}
       <div className="flex-1 relative flex flex-col h-full">
         {/* Background Image */}
-        <div 
+        <div
           className="absolute inset-0 z-0 bg-cover bg-center"
           style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1542296332-2e4473faf563?q=80&w=2070&auto=format&fit=crop")' }}
         >
-          {/* Dark overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#002f3a]/80 via-[#002f3a]/40 to-transparent"></div>
         </div>
 
@@ -117,9 +163,9 @@ export default function App() {
         <div className="relative z-10 flex justify-end items-center p-6 space-x-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Tìm kiếm" 
+            <input
+              type="text"
+              placeholder="Tìm kiếm"
               className="pl-10 pr-4 py-2 rounded-full w-64 border-none focus:ring-2 focus:ring-[#005564] outline-none shadow-md"
             />
           </div>
@@ -133,7 +179,7 @@ export default function App() {
 
         {/* Center Content */}
         <div className="relative z-10 flex-1 flex flex-col justify-center px-12">
-          {/* Promo Text (Right aligned roughly) */}
+          {/* Promo Text */}
           <div className="absolute right-12 top-20 text-white text-right space-y-2">
             <p className="text-lg">Tháng 4 - Mùa Hoa Mở Lối</p>
             <h1 className="text-5xl font-bold tracking-wider">ƯU ĐÃI ĐẾN 15%</h1>
@@ -142,7 +188,7 @@ export default function App() {
             </button>
           </div>
 
-          {/* Stepper (Left aligned) */}
+          {/* Stepper */}
           <div className="absolute left-12 top-20 space-y-6 text-white/50 text-xl font-bold">
              <div className="text-white text-3xl border-l-2 border-white pl-4 h-8 flex items-center relative -left-[2px]">01</div>
              <div className="pl-4">02</div>
@@ -151,7 +197,6 @@ export default function App() {
 
           {/* Flight Search Box */}
           <div className="mt-40 bg-white rounded-2xl shadow-2xl w-full max-w-5xl mx-auto overflow-hidden">
-             {/* Tabs */}
              <div className="flex border-b">
                 <button className="flex-1 py-4 text-center font-semibold text-[#005564] border-b-2 border-[#005564]">Mua vé</button>
                 <button className="flex-1 py-4 text-center text-gray-500 hover:text-gray-700">Quản lý đặt chỗ</button>
@@ -159,10 +204,8 @@ export default function App() {
                 <button className="flex-1 py-4 text-center text-gray-500 hover:text-gray-700">Trạng thái chuyến bay</button>
                 <button className="flex-1 py-4 text-center text-gray-500 hover:text-gray-700">Tra cứu lịch bay</button>
              </div>
-             
-             {/* Search Form */}
+
              <div className="p-8 flex items-center gap-4">
-                {/* From */}
                 <div className="flex-1 border-b pb-2 cursor-pointer">
                   <div className="flex items-center text-gray-500 text-sm mb-1">
                     <PlaneTakeoff size={16} className="mr-2"/> Từ
@@ -173,12 +216,10 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Swap Icon */}
                 <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-100 cursor-pointer border shadow-sm z-10 mx-[-20px] bg-white">
                   <ArrowRightLeft size={18} />
                 </div>
 
-                {/* To */}
                 <div className="flex-1 border-b pb-2 cursor-pointer pl-6">
                   <div className="flex items-center text-gray-500 text-sm mb-1">
                     <PlaneLanding size={16} className="mr-2"/> Đến
@@ -208,8 +249,8 @@ export default function App() {
       {chatState !== 'closed' && (
         <div className={`
           fixed transition-all duration-300 ease-in-out bg-white shadow-2xl flex flex-col z-50
-          ${chatState === 'small' 
-            ? 'bottom-6 right-6 w-96 h-[550px] rounded-xl border border-gray-200' 
+          ${chatState === 'small'
+            ? 'bottom-6 right-6 w-96 h-[580px] rounded-xl border border-gray-200'
             : 'inset-0 w-full h-full'
           }
         `}>
@@ -217,7 +258,10 @@ export default function App() {
           <div className="bg-[#417684] text-white p-3 flex justify-between items-center rounded-t-xl shrink-0">
             <div className="flex items-center space-x-2">
               <LotusLogo />
-              <span className="font-medium text-lg">Vietnam Airlines</span>
+              <div>
+                <span className="font-medium text-lg">Nemo</span>
+                <p className="text-xs text-teal-200">AI Assistant · Vietnam Airlines</p>
+              </div>
             </div>
             <div className="flex items-center space-x-3">
               {chatState === 'small' ? (
@@ -237,18 +281,17 @@ export default function App() {
 
           {/* Chat Messages Area */}
           <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 bg-gray-50/50 space-y-4">
-            {chatMessages.map((msg, idx) => (
+            {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.sender === 'bot' && (
                   <div className="mr-2 mt-auto mb-1 flex-shrink-0">
                     <ChatAvatar />
                   </div>
                 )}
-                
                 <div className={`
-                  max-w-[80%] p-3 text-[15px] whitespace-pre-wrap leading-relaxed shadow-sm
-                  ${msg.sender === 'user' 
-                    ? 'bg-[#3C6E7B] text-white rounded-2xl rounded-tr-sm' 
+                  max-w-[80%] p-3 text-[14px] whitespace-pre-wrap leading-relaxed shadow-sm
+                  ${msg.sender === 'user'
+                    ? 'bg-[#3C6E7B] text-white rounded-2xl rounded-tr-sm'
                     : 'bg-[#F0F4F8] text-[#333] rounded-2xl rounded-tl-sm'
                   }
                 `}>
@@ -256,37 +299,80 @@ export default function App() {
                 </div>
               </div>
             ))}
+
+            {/* Loading indicator */}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="mr-2 mt-auto mb-1 flex-shrink-0">
+                  <ChatAvatar />
+                </div>
+                <div className="bg-[#F0F4F8] rounded-2xl rounded-tl-sm p-3 flex items-center gap-2">
+                  <Loader2 size={16} className="animate-spin text-teal-600" />
+                  <span className="text-sm text-gray-500">Nemo đang tra cứu...</span>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Quick Suggestions */}
+          {messages.length === 1 && (
+            <div className="px-4 pb-2 flex gap-2 flex-wrap">
+              {[
+                '✈️ Bay HAN → SGN ngày mai',
+                '🧳 Quy định hành lý',
+                '🏨 Khách sạn gần Nội Bài',
+                '💰 Giá vé Hà Nội - Đà Nẵng',
+              ].map((suggestion) => (
+                <button
+                  key={suggestion}
+                  onClick={() => { setInputValue(suggestion.slice(3)); }}
+                  className="text-xs bg-teal-50 border border-teal-200 text-teal-700 rounded-full px-3 py-1 hover:bg-teal-100 transition-colors"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Chat Input Area */}
           <div className="p-4 bg-white border-t border-gray-100 shrink-0">
             <div className="relative flex items-center">
-              <button className="absolute left-3 text-gray-400 hover:text-gray-600">
-                <Paperclip size={20} />
-              </button>
-              <input 
-                type="text" 
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="Nhập câu hỏi của Quý khách tại đây"
-                className="w-full pl-10 pr-12 py-3 bg-white border border-gray-300 rounded-full focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-sm"
+                disabled={isLoading}
+                className="w-full pl-4 pr-12 py-3 bg-white border border-gray-300 rounded-full focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-sm disabled:opacity-60"
               />
-              <button className="absolute right-3 text-gray-300 hover:text-teal-600">
-                <Send size={20} />
+              <button
+                onClick={sendMessage}
+                disabled={isLoading || !inputValue.trim()}
+                className="absolute right-3 text-teal-600 hover:text-teal-800 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+              >
+                {isLoading ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
               </button>
             </div>
-            
+
             <div className="text-center mt-3 text-[11px] text-gray-500">
-              NEO có thể sai sót, hãy kiểm tra thông tin quan trọng.<br/>
+              Nemo có thể sai sót, hãy kiểm tra thông tin quan trọng.<br/>
               <a href="#" className="text-blue-500 hover:underline">Điều khoản sử dụng</a>
             </div>
           </div>
         </div>
       )}
-      
-      {/* Floating Refresh button at bottom right just like screenshot */}
+
+      {/* Floating Chat Button */}
       {chatState === 'closed' && (
-         <div className="fixed bottom-4 right-4 bg-white p-2 shadow-lg cursor-pointer border z-40">
-            <img src="https://img.icons8.com/?size=100&id=43224&format=png&color=000000" alt="refresh" className="w-6 h-6 opacity-70"/>
-         </div>
+        <button
+          onClick={() => setChatState('small')}
+          className="fixed bottom-6 right-6 bg-[#005564] text-white rounded-full p-4 shadow-xl hover:bg-[#004a57] transition-colors z-40 flex items-center gap-2"
+        >
+          <MessageCircle size={24} />
+          <span className="text-sm font-medium pr-1">Chat với Nemo</span>
+        </button>
       )}
 
     </div>

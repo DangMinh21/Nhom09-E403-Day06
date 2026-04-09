@@ -1,0 +1,137 @@
+{
+  "routes": {
+    "HAN-SGN": {
+      "distance_km": 1137,
+      "duration_min": 120,
+      "economy": {
+        "min_vnd": 850000,
+        "max_vnd": 3200000,
+        "avg_vnd": 1650000
+      },
+      "premium_economy": {
+        "min_vnd": 2500000,
+        "max_vnd": 5500000,
+        "avg_vnd": 3800000
+      },
+      "business": {
+        "min_vnd": 6500000,
+        "max_vnd": 12000000,
+        "avg_vnd": 8500000
+      }
+    },
+    "SGN-HAN": {
+      "distance_km": 1137,
+      "duration_min": 120,
+      "economy": {
+        "min_vnd": 850000,
+        "max_vnd": 3200000,
+        "avg_vnd": 1650000
+      },
+      "premium_economy": {
+        "min_vnd": 2500000,
+        "max_vnd": 5500000,
+        "avg_vnd": 3800000
+      },
+      "business": {
+        "min_vnd": 6500000,
+        "max_vnd": 12000000,
+        "avg_vnd": 8500000
+      }
+    },
+    "HAN-DAD": {
+      "distance_km": 610,
+      "duration_min": 75,
+      "economy": {
+        "min_vnd": 550000,
+        "max_vnd": 2100000,
+        "avg_vnd": 1100000
+      },
+      "premium_economy": {
+        "min_vnd": 1800000,
+        "max_vnd": 3800000,
+        "avg_vnd": 2600000
+      },
+      "business": {
+        "min_vnd": 4500000,
+        "max_vnd": 8500000,
+        "avg_vnd": 6200000
+      }
+    },
+    "DAD-HAN": {
+      "distance_km": 610,
+      "duration_min": 75,
+      "economy": {
+        "min_vnd": 550000,
+        "max_vnd": 2100000,
+        "avg_vnd": 1100000
+      },
+      "premium_economy": {
+        "min_vnd": 1800000,
+        "max_vnd": 3800000,
+        "avg_vnd": 2600000
+      },
+      "business": {
+        "min_vnd": 4500000,
+        "max_vnd": 8500000,
+        "avg_vnd": 6200000
+      }
+    },
+    "SGN-DAD": {
+      "distance_km": 600,
+      "duration_min": 70,
+      "economy": {
+        "min_vnd": 500000,
+        "max_vnd": 1900000,
+        "avg_vnd": 950000
+      },
+      "premium_economy": {
+        "min_vnd": 1600000,
+        "max_vnd": 3500000,
+        "avg_vnd": 2400000
+      },
+      "business": {
+        "min_vnd": 4200000,
+        "max_vnd": 8000000,
+        "avg_vnd": 5800000
+      }
+    },
+    "HAN-PQC": {
+      "distance_km": 1272,
+      "duration_min": 135,
+      "economy": {
+        "min_vnd": 950000,
+        "max_vnd": 3500000,
+        "avg_vnd": 1900000
+      },
+      "premium_economy": {
+        "min_vnd": 2800000,
+        "max_vnd": 6000000,
+        "avg_vnd": 4200000
+      },
+      "business": {
+        "min_vnd": 7000000,
+        "max_vnd": 13000000,
+        "avg_vnd": 9500000
+      }
+    },
+    "SGN-PQC": {
+      "distance_km": 290,
+      "duration_min": 55,
+      "economy": {
+        "min_vnd": 350000,
+        "max_vnd": 1500000,
+        "avg_vnd": 750000
+      },
+      "premium_economy": {
+        "min_vnd": 1200000,
+        "max_vnd": 2800000,
+        "avg_vnd": 1900000
+      },
+      "business": {
+        "min_vnd": 3500000,
+        "max_vnd": 6500000,
+        "avg_vnd": 4800000
+      }
+    }
+  }
+}
