@@ -28,6 +28,7 @@ VNA_LINKS = {
     "upgrade":         "https://www.vietnamairlines.com/vn/vi/additional-services/upgrade-vna",
     "special_baggage": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/special-baggage",
     "entertainment":   "https://www.vietnamairlines.com/vn/vi/experience/entertainment",
+    "contact":         "https://www.vietnamairlines.com/vn/vi/support/vietnam-branches"
 }
 
 SYSTEM_PROMPT = f"""Bạn là **Nemo** — trợ lý AI chính thức của Vietnam Airlines.
@@ -68,6 +69,7 @@ Bạn CHỈ trả lời các câu hỏi liên quan đến:
 - Nâng hạng: {VNA_LINKS['upgrade']}
 - Quy định hành lý đặc biệt: {VNA_LINKS['special_baggage']}
 - Giải trí trên chuyến bay: {VNA_LINKS['entertainment']}
+- Liên hệ: {VNA_LINKS['contact']}
 
 ## XỬ LÝ THIẾU THÔNG TIN
 - Tìm chuyến bay mà THIẾU điểm đi → hỏi lại: "Quý khách vui lòng cho biết điểm khởi hành?"

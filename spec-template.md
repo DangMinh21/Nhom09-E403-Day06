@@ -13,7 +13,7 @@ Người dùng cần tra cứu thông tin chuyến bay, giá vé, hành trình, 
 |   | Value | Trust | Feasibility |
 |---|-------|-------|-------------|
 | **Câu hỏi** | User nào? Pain gì? AI giải gì? | Khi AI sai thì sao? User sửa bằng cách nào? | Cost/latency bao nhiêu? Risk chính? |
-| **Trả lời** | *Khi người dùng cần tra cứu thông tin, chuyến bay, đặt vé hoặc các thông tin liên quan, họ phải truy cập vào các trang cụ thể để xem thông tin, thao tác thủ công* | *AI trả lời sai thông tin → user tốn thời gian confirm tại sân bay, gây phiền hà, lễ tân phải hướng dẫn lại* | *~$0.01/request, latency <2s, risk: AI trả lời sai thông tin, làm delay hành khách tại sân bay hoặc làm hàng khách chuẩn bị không phù hợp, chỉ cần tiếp viên hướng dẫn lại là ok* |
+| **Trả lời** | *Khi người dùng cần tra cứu thông tin, chuyến bay, đặt vé hoặc các thông tin liên quan, họ phải truy cập vào các trang cụ thể để xem thông tin, thao tác thủ công. AI hiện tại hỗ trợ tra cứu thông tin chuyến bay, khách hàng hoặc hướng dẫn thủ tục & chính sách* | *AI trả lời sai thông tin, quay về quy trình tra cứu cứng ngắc → user tốn thời gian confirm tại sân bay, gây phiền hà, lễ tân phải hướng dẫn lại* | *~$0.01/request, latency <2s, risk: AI trả lời sai thông tin, không đúng trọng tâm, lãng phí thời gian khách hàng ảnh hưởng đến nhắm bắt thông tin, tiếp viên bị quá tải yêu cầu hỗ trợ* |
 
 **Automation hay augmentation?** ☑ Automation · ☐ Augmentation
 
