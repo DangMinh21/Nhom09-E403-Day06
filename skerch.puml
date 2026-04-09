@@ -13,6 +13,7 @@ state "TẦNG NGƯỜI DÙNG (UI)" as Layer1 <<UI>> {
     state "Tiếp nhận câu hỏi" as Input
     state "Hiển thị Phản hồi (Card/Text)" as Response
     state "Thu thập Đánh giá (CSAT)" as Feedback
+    state "Trang đích" as Landing
 }
 
 state "TẦNG XỬ LÝ TRUNG TÂM (NLP/Logic)" as Layer2 <<Logic>> {
@@ -22,11 +23,12 @@ state "TẦNG XỬ LÝ TRUNG TÂM (NLP/Logic)" as Layer2 <<Logic>> {
 }
 
 state "TẦNG TRUY XUẤT DỮ LIỆU (Tools)" as Layer3 <<Data>> {
-    state "Tool: Truy vấn Chính sách (RAG)" as ToolPolicy
-    state "Tool: Truy xuất Database (API)" as ToolDB
-    
+    state "Tool: Truy vấn Chính sách" as ToolPolicy
+    state "Tool: Truy xuất dữ liệu" as ToolDB
+
     state "Dữ liệu A: Vé & Chỗ" as DB_A
     state "Dữ liệu B: Chuyến bay" as DB_B
+    state "Dữ liệu C: Lộ trình" as DB_C
 }
 
 state "HỖ TRỢ TRỰC TIẾP" as Layer4 <<External>> {
@@ -34,7 +36,7 @@ state "HỖ TRỢ TRỰC TIẾP" as Layer4 <<External>> {
 }
 
 state "BỘ NHỚ HỌC TẬP" as Layer5 <<Learning>> {
-    state "Ghi nhận & Tối ưu Model" as Learning
+    state "Ghi nhận & lưu trữ" as Learning
 }
 
 [*] --> Input
@@ -49,6 +51,7 @@ Classify --> Response : [Trả lời trực tiếp]
 
 ToolDB --> DB_A
 ToolDB --> DB_B
+ToolDB --> DB_C
 
 
 ToolDB --> Response
@@ -56,6 +59,7 @@ ToolPolicy --> Response
 Reject --> Response
 
 Response --> Feedback
+Response --> Landing : [Hyperlink]
 
 Feedback --> Learning : [Đúng/Hài lòng]
 Feedback --> Agent : [Sai/Thất vọng]
