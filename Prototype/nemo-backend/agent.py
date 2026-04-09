@@ -226,3 +226,55 @@ async def chat_with_nemo(message: str, history: list[dict]) -> str:
     )
 
     return final_response.choices[0].message.content
+
+
+POPULAR_SUGGESTIONS = [
+    "Có chuyến bay nào từ Hà Nội đi TP.HCM ngày mai không?",
+    "Giá vé Hà Nội - Đà Nẵng hạng economy bao nhiêu?",
+    "Quy định hành lý xách tay của Vietnam Airlines?",
+    "Khách sạn gần sân bay Nội Bài có những chỗ nào?",
+    "Chuyến bay VN200 hôm nay có đúng giờ không?",
+]
+
+
+async def get_suggestions(history: list[dict]) -> list[str]:
+    if not history:
+        return POPULAR_SUGGESTIONS
+
+    # Lấy tối đa 6 tin nhắn gần nhất để tránh token dư
+    recent = history[-6:]
+    context = "\n".join(
+        f"{'User' if m['role'] == 'user' else 'Nemo'}: {m['content'][:200]}"
+        for m in recent
+    )
+
+    prompt = f"""Dựa vào đoạn hội thoại dưới đây giữa người dùng và Nemo (AI của Vietnam Airlines), hãy đề xuất đúng 5 câu hỏi tiếp theo ngắn gọn, phù hợp, bằng tiếng Việt mà người dùng có thể muốn hỏi.
+
+Hội thoại:
+{context}
+
+Yêu cầu:
+- Đa dạng chủ đề (không lặp lại điều đã hỏi)
+- Mỗi câu dưới 12 từ
+- Trả về JSON array, không giải thích thêm. Ví dụ: ["câu 1", "câu 2", "câu 3", "câu 4", "câu 5"]"""
+
+    try:
+        resp = await client.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=300,
+            response_format={"type": "json_object"},
+        )
+        raw = resp.choices[0].message.content
+        parsed = json.loads(raw)
+        # GPT có thể trả về {"suggestions": [...]} hoặc {"questions": [...]} hoặc array trực tiếp
+        if isinstance(parsed, list):
+            suggestions = parsed
+        else:
+            suggestions = next(
+                (v for v in parsed.values() if isinstance(v, list)), []
+            )
+        return [str(s) for s in suggestions[:5]] if suggestions else POPULAR_SUGGESTIONS
+    except Exception:
+        return POPULAR_SUGGESTIONS
