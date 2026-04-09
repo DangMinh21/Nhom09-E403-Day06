@@ -93,7 +93,7 @@ Nếu sai ngược lại thì chuyện gì xảy ra? *VD: Nếu chọn precision
 | Metric                          | Threshold | Red flag (dừng khi)             |
 |---------------------------------|-----------|---------------------------------|
 | *Accuracy phân loại đúng*       | *≥90%*    | *<75% trong 2 tuần liên tiếp*   |
-| *Latency (thời gian phản hồi)* | *<2s*     | *>5s trung bình trong 1 tuần*   |
+| *Latency (thời gian phản hồi)* | *<5s*     | *>10s trung bình trong 1 tuần*   |
 | *User feedback hữu ích*         | *≥80%*    | *<60% trong 1 tuần*             |
 
 ---
@@ -119,6 +119,8 @@ Nếu sai ngược lại thì chuyện gì xảy ra? *VD: Nếu chọn precision
 | **Cost**       | *$30/ngày inference*                | *$100/ngày inference*                 | *$300/ngày inference*                  |
 | **Benefit**    | *Giảm 1h support/ngày*              | *Giảm 5h support/ngày*                | *Giảm 15h support/ngày, tăng retention 10%* |
 | **Net**        | *Lợi nhuận thấp, đủ duy trì*         | *Lợi nhuận ổn định, có thể mở rộng*   | *Lợi nhuận cao, mở rộng quy mô dễ dàng* |
+
+Net = (Số giờ support tiết kiệm được * lương CSKH/giờ) - Cost inference
 
 **Kill criteria:** *Dừng khi chi phí vượt lợi ích trong 3 tháng liên tiếp hoặc tỷ lệ hài lòng <50% trong 1 tháng.*
 
