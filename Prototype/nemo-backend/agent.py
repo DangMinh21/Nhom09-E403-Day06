@@ -313,8 +313,37 @@ TOOL_FUNCTIONS = {
 }
 
 
+CARD_TOOLS = {"search_flights", "search_hotels_near_airport"}
+
+
+def _build_cards(fn_name: str, result: dict) -> dict | None:
+    """Extract structured card data from tool results for frontend rendering."""
+    if fn_name == "search_flights" and "flights" in result:
+        return {
+            "type": "flights",
+            "from_airport": result.get("from_airport", ""),
+            "from_name": result.get("from_name", ""),
+            "to_airport": result.get("to_airport", ""),
+            "to_name": result.get("to_name", ""),
+            "date": result.get("date", ""),
+            "passengers": result.get("passengers", 1),
+            "items": result.get("flights", []),
+        }
+    if fn_name == "search_hotels_near_airport" and "hotels" in result:
+        return {
+            "type": "hotels",
+            "airport_code": result.get("airport_code", ""),
+            "airport_name": result.get("airport_name", ""),
+            "city": result.get("city", ""),
+            "checkin": result.get("checkin"),
+            "checkout": result.get("checkout"),
+            "items": result.get("hotels", []),
+        }
+    return None
+
+
 @observe(name="chat_with_nemo")
-async def chat_with_nemo(message: str, history: list[dict], session_id: str | None = None) -> str:
+async def chat_with_nemo(message: str, history: list[dict], session_id: str | None = None) -> dict:
     if session_id:
         langfuse_context.update_current_trace(session_id=session_id, user_id=session_id)
 
@@ -334,10 +363,11 @@ async def chat_with_nemo(message: str, history: list[dict], session_id: str | No
     assistant_message = response.choices[0].message
 
     if not assistant_message.tool_calls:
-        return assistant_message.content
+        return {"response": assistant_message.content, "cards": None}
 
     messages.append(assistant_message)
 
+    cards = None
     for tool_call in assistant_message.tool_calls:
         fn_name = tool_call.function.name
         fn_args = json.loads(tool_call.function.arguments)
@@ -354,6 +384,10 @@ async def chat_with_nemo(message: str, history: list[dict], session_id: str | No
             output=result,
         )
 
+        # Capture card data from list-type tools
+        if fn_name in CARD_TOOLS and cards is None:
+            cards = _build_cards(fn_name, result)
+
         messages.append({
             "role": "tool",
             "tool_call_id": tool_call.id,
@@ -367,7 +401,7 @@ async def chat_with_nemo(message: str, history: list[dict], session_id: str | No
         name="nemo-final-call",
     )
 
-    return final_response.choices[0].message.content
+    return {"response": final_response.choices[0].message.content, "cards": cards}
 
 
 POPULAR_SUGGESTIONS = [

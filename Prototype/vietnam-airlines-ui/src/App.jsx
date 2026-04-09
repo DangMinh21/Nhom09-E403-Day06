@@ -7,11 +7,13 @@ import {
   ShoppingBag, Armchair, Shield, LayoutGrid, Building2,
   Maximize2, Minimize2, X, Send, PlaneTakeoff, PlaneLanding,
   Loader2, ThumbsUp, ThumbsDown, MessageSquare, ChevronDown, ChevronUp,
-  CheckCircle2
+  CheckCircle2, ExternalLink, MapPin
 } from 'lucide-react';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
 const COLLAPSED_LINES = 5;
+const VNA_BOOK_URL = 'https://www.vietnamairlines.com/vn/vi/buy-tickets-other-products/booking-and-manage-bookings/book-tickets';
+const VNA_HOTELS_URL = 'https://www.vietnamairlines.com/vn/vi/buy-tickets-other-products/hotels-and-tours';
 
 // --- COMPONENTS ---
 
@@ -178,18 +180,190 @@ const mdComponents = {
   h1: ({ children }) => <h1 className="text-base font-bold mb-1">{children}</h1>,
   h2: ({ children }) => <h2 className="text-sm font-bold mb-1">{children}</h2>,
   h3: ({ children }) => <h3 className="text-sm font-semibold mb-1">{children}</h3>,
-  table: ({ children }) => (
-    <div className="overflow-x-auto mb-2">
-      <table className="text-xs border-collapse w-full">{children}</table>
-    </div>
-  ),
-  th: ({ children }) => (
-    <th className="border border-gray-300 bg-gray-100 px-2 py-1 text-left font-semibold">{children}</th>
-  ),
-  td: ({ children }) => (
-    <td className="border border-gray-300 px-2 py-1">{children}</td>
-  ),
+  table: () => null,
+  thead: () => null,
+  tbody: () => null,
+  tr: () => null,
+  th: () => null,
+  td: () => null,
 };
+
+// --- FLIGHT CARD ---
+
+function formatPrice(vnd) {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(vnd);
+}
+
+function FlightCard({ flight, fromName, toName }) {
+  const isDelayed = flight.status && flight.status !== 'Đúng giờ';
+  const bookUrl = `${VNA_BOOK_URL}`;
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      {/* Header */}
+      <div className="bg-[#005564] text-white px-3 py-2 flex justify-between items-center">
+        <span className="font-bold text-sm tracking-wide">{flight.flight_number}</span>
+        <span className="text-xs text-teal-200">{flight.aircraft}</span>
+      </div>
+
+      {/* Route */}
+      <div className="px-3 pt-2.5 pb-1 flex items-center gap-2">
+        <div className="text-center">
+          <div className="text-lg font-bold text-gray-800 leading-none">{flight.departure_time}</div>
+          <div className="text-[10px] text-gray-500 mt-0.5">{fromName?.split(' - ')[0] || fromName}</div>
+        </div>
+        <div className="flex-1 flex flex-col items-center gap-0.5">
+          <div className="text-[10px] text-gray-400">{Math.floor(flight.duration_min / 60)}g{flight.duration_min % 60 > 0 ? ` ${flight.duration_min % 60}p` : ''}</div>
+          <div className="w-full flex items-center gap-1">
+            <div className="h-px flex-1 bg-gray-300"></div>
+            <Plane size={12} className="text-[#005564]" />
+            <div className="h-px flex-1 bg-gray-300"></div>
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="text-lg font-bold text-gray-800 leading-none">{flight.arrival_time}</div>
+          <div className="text-[10px] text-gray-500 mt-0.5">{toName?.split(' - ')[0] || toName}</div>
+        </div>
+      </div>
+
+      {/* Status + seats */}
+      <div className="px-3 pb-2 flex items-center gap-2">
+        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${isDelayed ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'}`}>
+          {flight.status}
+        </span>
+        <span className="text-[10px] text-gray-500">{flight.available_seats} ghế còn trống</span>
+      </div>
+
+      {/* Price + button */}
+      <div className="border-t border-gray-100 px-3 py-2 flex items-center justify-between bg-gray-50">
+        <div>
+          <div className="text-[10px] text-gray-500">Economy từ</div>
+          <div className="text-sm font-bold text-[#005564]">{formatPrice(flight.economy_price_vnd)}</div>
+        </div>
+        <a
+          href={bookUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 bg-[#005564] hover:bg-[#004a57] text-white text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
+        >
+          Đặt vé <ExternalLink size={11} />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// --- HOTEL CARD ---
+
+function StarRating({ count }) {
+  return (
+    <span className="flex gap-0.5">
+      {Array.from({ length: count }).map((_, i) => (
+        <Star key={i} size={10} className="fill-yellow-400 text-yellow-400" />
+      ))}
+    </span>
+  );
+}
+
+function HotelCard({ hotel }) {
+  const bookUrl = hotel.booking_url || `${VNA_HOTELS_URL}`;
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      {/* Header */}
+      <div className="bg-[#005564] text-white px-3 py-2">
+        <div className="font-semibold text-sm leading-tight">{hotel.name}</div>
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <StarRating count={hotel.stars} />
+          <span className="text-teal-200 text-[10px]">({hotel.stars} sao)</span>
+        </div>
+      </div>
+
+      {/* Info */}
+      <div className="px-3 py-2 space-y-1.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1 text-gray-500 text-[11px]">
+            <MapPin size={11} />
+            <span>Cách sân bay {hotel.distance_km} km</span>
+          </div>
+          <div className="flex items-center gap-1 text-yellow-600 text-xs font-semibold">
+            <span>★ {hotel.rating}</span>
+          </div>
+        </div>
+
+        {hotel.amenities?.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {hotel.amenities.slice(0, 3).map((a) => (
+              <span key={a} className="text-[10px] bg-teal-50 text-teal-700 border border-teal-100 rounded-full px-1.5 py-0.5">{a}</span>
+            ))}
+            {hotel.amenities.length > 3 && (
+              <span className="text-[10px] text-gray-400">+{hotel.amenities.length - 3}</span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Price + button */}
+      <div className="border-t border-gray-100 px-3 py-2 flex items-center justify-between bg-gray-50">
+        <div>
+          <div className="text-[10px] text-gray-500">Giá từ / đêm</div>
+          <div className="text-sm font-bold text-[#005564]">{formatPrice(hotel.price_per_night_vnd)}</div>
+        </div>
+        <a
+          href={bookUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 bg-[#005564] hover:bg-[#004a57] text-white text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
+        >
+          Đặt phòng <ExternalLink size={11} />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// --- CARD LIST ---
+
+function CardList({ cards }) {
+  if (!cards?.items?.length) return null;
+
+  if (cards.type === 'flights') {
+    return (
+      <div className="mt-2">
+        <p className="text-[11px] text-gray-500 mb-1.5 font-medium">
+          ✈️ {cards.from_name} → {cards.to_name} · {cards.date}
+        </p>
+        <div className="space-y-2 max-h-[420px] overflow-y-auto pr-0.5">
+          {cards.items.map((flight) => (
+            <FlightCard
+              key={flight.flight_number}
+              flight={flight}
+              fromName={cards.from_name}
+              toName={cards.to_name}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (cards.type === 'hotels') {
+    return (
+      <div className="mt-2">
+        <p className="text-[11px] text-gray-500 mb-1.5 font-medium">
+          🏨 Khách sạn gần {cards.airport_name} · {cards.city}
+        </p>
+        <div className="space-y-2 max-h-[420px] overflow-y-auto pr-0.5">
+          {cards.items.map((hotel) => (
+            <HotelCard key={hotel.name} hotel={hotel} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
 
 // --- BOT MESSAGE ---
 
@@ -208,7 +382,7 @@ function BotMessage({ msg, prevUserMessage }) {
         <ChatAvatar />
       </div>
 
-      <div className="max-w-[82%]">
+      <div className="max-w-[90%]">
         {/* Bubble */}
         <div className="bg-[#F0F4F8] text-[#333] rounded-2xl rounded-tl-sm px-3.5 py-3 text-[13.5px] shadow-sm">
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
@@ -226,6 +400,9 @@ function BotMessage({ msg, prevUserMessage }) {
               }
             </button>
           )}
+
+          {/* Cards rendered inside the bubble */}
+          {msg.cards && <CardList cards={msg.cards} />}
         </div>
 
         {/* Feedback bar */}
@@ -252,7 +429,7 @@ const INITIAL_SUGGESTIONS = [
 ];
 
 let msgIdCounter = 0;
-const makeMsg = (sender, text) => ({ id: ++msgIdCounter, sender, text });
+const makeMsg = (sender, text, cards = null) => ({ id: ++msgIdCounter, sender, text, cards });
 
 export default function App() {
   const [chatState, setChatState] = useState('closed');
@@ -299,7 +476,7 @@ export default function App() {
       });
       if (!res.ok) throw new Error();
       const data = await res.json();
-      const botMsg = makeMsg('bot', data.response);
+      const botMsg = makeMsg('bot', data.response, data.cards || null);
       setMessages(prev => [...prev, botMsg]);
 
       // Fetch suggestions based on updated history (run in background)
@@ -541,7 +718,7 @@ export default function App() {
               <p className="text-[10px] text-gray-400 mb-1.5 px-1">
                 {loadingSuggestions ? 'Đang cập nhật gợi ý...' : 'Gợi ý câu hỏi'}
               </p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
                 {suggestions.map((s) => (
                   <button
                     key={s}
@@ -549,7 +726,7 @@ export default function App() {
                       setInputValue(s);
                       setTimeout(() => inputRef.current?.focus(), 50);
                     }}
-                    className="text-xs bg-teal-50 border border-teal-200 text-teal-700 rounded-full px-3 py-1 hover:bg-teal-100 transition-colors text-left"
+                    className="text-xs bg-teal-50 border border-teal-200 text-teal-700 rounded-full px-3 py-1 hover:bg-teal-100 transition-colors whitespace-nowrap flex-shrink-0"
                   >
                     {s}
                   </button>
