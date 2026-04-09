@@ -1,0 +1,65 @@
+@startuml
+title KIẾN TRÚC HỆ THỐNG NEO HYBRID CHATBOT (VNA)
+skinparam backgroundColor #FFFFFF
+skinparam state {
+  BackgroundColor<<UI>> #E8EAF6
+  BackgroundColor<<Logic>> #E1F5FE
+  BackgroundColor<<Data>> #FFF9C4
+  BackgroundColor<<External>> #F8BBD0
+  BackgroundColor<<Learning>> #C8E6C9
+}
+
+state "TẦNG NGƯỜI DÙNG (UI)" as Layer1 <<UI>> {
+    state "Tiếp nhận câu hỏi" as Input
+    state "Hiển thị Phản hồi (Card/Text)" as Response
+    state "Thu thập Đánh giá (CSAT)" as Feedback
+}
+
+state "TẦNG XỬ LÝ TRUNG TÂM (NLP/Logic)" as Layer2 <<Logic>> {
+    state "Phân tích Sắc thái & Ý định" as Analyze
+    state "Bộ điều hướng (Dispatcher)" as Classify
+    state "Xử lý Lạc đề (Guardrails)" as Reject
+}
+
+state "TẦNG TRUY XUẤT DỮ LIỆU (Tools)" as Layer3 <<Data>> {
+    state "Tool: Truy vấn Chính sách (RAG)" as ToolPolicy
+    state "Tool: Truy xuất Database (API)" as ToolDB
+    
+    state "Dữ liệu A: Vé & Chỗ" as DB_A
+    state "Dữ liệu B: Chuyến bay" as DB_B
+}
+
+state "HỖ TRỢ TRỰC TIẾP" as Layer4 <<External>> {
+    state "Chuyển tiếp Human Agent" as Agent
+}
+
+state "BỘ NHỚ HỌC TẬP" as Layer5 <<Learning>> {
+    state "Ghi nhận & Tối ưu Model" as Learning
+}
+
+[*] --> Input
+Input --> Analyze
+Analyze --> Agent : [Tiêu cực/Yêu cầu trực tiếp]
+Analyze --> Classify : [Hợp lệ]
+
+Classify --> Reject : [Lạc đề]
+Classify --> ToolPolicy : [Hỏi Quy định/Thủ tục]
+Classify --> ToolDB : [Tra cứu Vé/Chuyến/User]
+Classify --> Response : [Trả lời trực tiếp]
+
+ToolDB --> DB_A
+ToolDB --> DB_B
+
+
+ToolDB --> Response
+ToolPolicy --> Response
+Reject --> Response
+
+Response --> Feedback
+
+Feedback --> Learning : [Đúng/Hài lòng]
+Feedback --> Agent : [Sai/Thất vọng]
+Learning --> [*]
+Agent --> [*]
+
+@enduml 
