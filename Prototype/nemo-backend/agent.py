@@ -17,20 +17,16 @@ client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 VNA_LINKS = {
-    "flight_schedule":  "https://www.vietnamairlines.com/vn/vi/plan-your-trip/flight-information/flight-schedule",
-    "book_flights":     "https://www.vietnamairlines.com/vn/vi/book/book-flights",
-    "flight_status":    "https://www.vietnamairlines.com/vn/vi/plan-your-trip/flight-information/flight-status",
-    "manage_booking":   "https://www.vietnamairlines.com/vn/vi/manage/manage-booking",
-    "online_checkin":   "https://www.vietnamairlines.com/vn/vi/manage/check-in/online-check-in",
-    "carry_on_baggage": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/carry-on-baggage",
-    "checked_baggage":  "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/checked-baggage",
-    "special_items":    "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/special-items",
-    "prohibited_items": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/prohibited-items",
-    "special_assistance": "https://www.vietnamairlines.com/vn/vi/travel-information/special-assistance",
-    "travel_with_pets": "https://www.vietnamairlines.com/vn/vi/travel-information/travel-with-pets",
-    "refund_exchange":  "https://www.vietnamairlines.com/vn/vi/manage/refund-and-exchange",
-    "lotusmiles":       "https://www.vietnamairlines.com/vn/vi/lotusmiles/about-lotusmiles",
-    "contact":          "https://www.vietnamairlines.com/vn/vi/contact-us",
+    "help_desk":       "https://www.vietnamairlines.com/vn/vi/help-desk",
+    "book_tickets":    "https://www.vietnamairlines.com/vn/vi/buy-tickets-other-products/booking-and-manage-bookings/book-tickets",
+    "how_to_buy":      "https://www.vietnamairlines.com/vn/vi/buy-tickets-other-products/how-to-buy-tickets-and-make-payment/how-to-purchase-tickets",
+    "check_in":        "https://www.vietnamairlines.com/vn/vi/buy-tickets-other-products/booking-and-manage-bookings/check-in",
+    "taxes_fees":      "https://www.vietnamairlines.com/vn/vi/buy-tickets-other-products/fare-conditions/taxes-fee-charges-surcharges",
+    "excess_baggage":  "https://www.vietnamairlines.com/vn/vi/additional-services/excess-baggage",
+    "advance_seat":    "https://www.vietnamairlines.com/vn/vi/additional-services/advance-seat-selection",
+    "upgrade":         "https://www.vietnamairlines.com/vn/vi/additional-services/upgrade-vna",
+    "special_baggage": "https://www.vietnamairlines.com/vn/vi/travel-information/baggage/special-baggage",
+    "entertainment":   "https://www.vietnamairlines.com/vn/vi/experience/entertainment",
 }
 
 SYSTEM_PROMPT = f"""Bạn là **Nemo** — trợ lý AI chính thức của Vietnam Airlines.
@@ -61,20 +57,16 @@ Bạn CHỈ trả lời các câu hỏi liên quan đến:
 - Mỗi câu trả lời có liên quan: LUÔN thêm 1 link tham khảo phù hợp ở cuối
 
 ## LINK THAM KHẢO (luôn thêm vào câu trả lời phù hợp)
-- Lịch bay / đặt vé: {VNA_LINKS['flight_schedule']}
-- Đặt vé online: {VNA_LINKS['book_flights']}
-- Trạng thái chuyến bay: {VNA_LINKS['flight_status']}
-- Quản lý đặt chỗ: {VNA_LINKS['manage_booking']}
-- Check-in online: {VNA_LINKS['online_checkin']}
-- Hành lý xách tay: {VNA_LINKS['carry_on_baggage']}
-- Hành lý ký gửi: {VNA_LINKS['checked_baggage']}
-- Vật phẩm đặc biệt: {VNA_LINKS['special_items']}
-- Vật phẩm cấm: {VNA_LINKS['prohibited_items']}
-- Hỗ trợ đặc biệt: {VNA_LINKS['special_assistance']}
-- Vận chuyển thú cưng: {VNA_LINKS['travel_with_pets']}
-- Hoàn/đổi vé: {VNA_LINKS['refund_exchange']}
-- Lotusmiles: {VNA_LINKS['lotusmiles']}
-- Liên hệ hỗ trợ: {VNA_LINKS['contact']}
+- Hỗ trợ: {VNA_LINKS['help_desk']}
+- Đặt vé: {VNA_LINKS['book_tickets']}
+- Hướng dẫn mua vé: {VNA_LINKS['how_to_buy']}
+- Làm thủ tục: {VNA_LINKS['check_in']}
+- Thuế, phí: {VNA_LINKS['taxes_fees']}
+- Mua thêm hành lý: {VNA_LINKS['excess_baggage']}
+- Chọn trước chỗ ngồi: {VNA_LINKS['advance_seat']}
+- Nâng hạng: {VNA_LINKS['upgrade']}
+- Quy định hành lý đặc biệt: {VNA_LINKS['special_baggage']}
+- Giải trí trên chuyến bay: {VNA_LINKS['entertainment']}
 
 ## XỬ LÝ THIẾU THÔNG TIN
 - Tìm chuyến bay mà THIẾU điểm đi → hỏi lại: "Quý khách vui lòng cho biết điểm khởi hành?"
